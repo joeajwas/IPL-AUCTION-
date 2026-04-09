@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IPL Mega Auction 2026 - Pro Edition</title>
+<title>IPL Mega Auction 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -45,458 +45,1159 @@
       repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px),
       repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px);
   }
+  .bg-layer::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 50% 30% at 50% 0%, rgba(255,215,0,0.06) 0%, transparent 60%);
+    animation: pulse-top 6s ease-in-out infinite alternate;
+  }
+  @keyframes pulse-top { from { opacity: 0.5; } to { opacity: 1; } }
 
   /* ─── LAYOUT ─── */
   #app { position: relative; z-index: 1; }
 
+  /* ─── HEADER ─── */
   header {
     text-align: center;
     padding: 2rem 1rem 1.5rem;
     border-bottom: 1px solid var(--glass-border);
+    position: relative;
+  }
+  .trophy-line {
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+    font-size: 2rem; margin-bottom: 0.3rem;
   }
   header h1 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(2.5rem, 8vw, 5rem);
     letter-spacing: 0.08em;
     background: linear-gradient(135deg, var(--gold) 0%, #fff8dc 40%, var(--gold) 70%, var(--gold-dark) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1;
+    text-shadow: none;
     filter: drop-shadow(0 0 30px rgba(255,215,0,0.4));
   }
-  header .subtitle { font-family: 'Orbitron', monospace; font-size: 0.75rem; letter-spacing: 0.3em; color: var(--cyan); }
+  header .subtitle {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--cyan);
+    opacity: 0.8;
+    margin-top: 0.4rem;
+  }
 
   /* ─── NAV TABS ─── */
-  .tabs { display: flex; justify-content: center; gap: 0.5rem; padding: 1rem; }
-  .tab-btn {
-    font-family: 'Orbitron', monospace; font-size: 0.7rem; padding: 0.6rem 1.4rem;
-    border: 1px solid var(--glass-border); background: var(--glass); color: rgba(255,255,255,0.5);
-    cursor: pointer; border-radius: 3px; transition: all 0.25s;
+  .tabs {
+    display: flex; justify-content: center; gap: 0.5rem;
+    padding: 1rem 1rem 0;
+    flex-wrap: wrap;
   }
-  .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(255,215,0,0.1); }
+  .tab-btn {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.55rem 1.4rem;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.25s;
+    backdrop-filter: blur(6px);
+  }
+  .tab-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,215,0,0.05));
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 20px rgba(255,215,0,0.15);
+  }
 
   /* ─── SECTIONS ─── */
   .section { display: none; padding: 1.5rem 1rem 3rem; max-width: 1300px; margin: 0 auto; }
   .section.active { display: block; animation: fadeIn 0.35s ease; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  .glass-panel { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; backdrop-filter: blur(12px); padding: 1.5rem; }
-  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--gold); margin-bottom: 1.2rem; }
+  /* ─── CARDS / GLASS PANELS ─── */
+  .glass-panel {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    backdrop-filter: blur(12px);
+    padding: 1.5rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
 
-  /* ─── FORMS ─── */
+  /* ─── SETUP ─── */
   .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   @media (max-width: 700px) { .setup-grid { grid-template-columns: 1fr; } }
-  
-  label { font-size: 0.75rem; color: rgba(255,255,255,0.6); display: block; margin-bottom: 0.4rem; }
-  input, select, textarea {
-    width: 100%; padding: 0.6rem; background: rgba(255,255,255,0.05);
-    border: 1px solid var(--glass-border); border-radius: 4px; color: var(--white);
-    font-family: 'Rajdhani', sans-serif; margin-bottom: 1rem;
+
+  label { font-size: 0.85rem; color: rgba(255,255,255,0.6); letter-spacing: 0.08em; display: block; margin-bottom: 0.4rem; }
+  input, select {
+    width: 100%; padding: 0.6rem 0.9rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
   }
+  input:focus, select:focus { border-color: var(--cyan); }
+  select option { background: var(--navy-mid); }
+
+  .field-group { margin-bottom: 1rem; }
 
   /* ─── BUTTONS ─── */
   .btn {
-    font-family: 'Orbitron', monospace; font-size: 0.75rem; padding: 0.7rem 1.8rem;
-    border: none; border-radius: 4px; cursor: pointer; transition: all 0.2s;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    padding: 0.7rem 1.8rem;
+    border: none; border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
   }
-  .btn-gold { background: linear-gradient(135deg, var(--gold), #e6a800); color: #1a0a00; font-weight: 700; }
-  .btn-cyan { border: 1px solid var(--cyan); color: var(--cyan); background: transparent; }
-  .btn-red { border: 1px solid var(--crimson); color: #ff6b6b; background: transparent; }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), #e6a800);
+    color: #1a0a00;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(255,215,0,0.3);
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,215,0,0.45); }
+  .btn-cyan {
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    box-shadow: 0 0 15px rgba(0,229,255,0.1);
+  }
+  .btn-cyan:hover { background: rgba(0,229,255,0.1); box-shadow: 0 0 25px rgba(0,229,255,0.25); }
+  .btn-red {
+    background: transparent;
+    border: 1px solid var(--crimson);
+    color: #ff6b6b;
+  }
+  .btn-red:hover { background: rgba(220,20,60,0.15); }
+  .btn-sm { padding: 0.4rem 1rem; font-size: 0.65rem; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ─── TEAMS LIST ─── */
+  .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .team-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .team-card:hover { border-color: rgba(255,215,0,0.3); }
+  .team-card .team-color-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .team-name { font-family: 'Bebas Neue'; font-size: 1.2rem; letter-spacing: 0.05em; }
+  .team-budget {
+    font-size: 0.8rem; color: var(--gold); margin-top: 0.2rem;
+    font-family: 'Orbitron', monospace;
+  }
+  .team-players-count { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 0.2rem; }
+  .remove-team { position: absolute; top: 0.6rem; right: 0.6rem; background: none; border: none; color: rgba(255,80,80,0.5); cursor: pointer; font-size: 1rem; }
+  .remove-team:hover { color: #ff5555; }
+
+  /* ─── PLAYERS TABLE ─── */
+  .players-table-wrap { overflow-x: auto; margin-top: 1rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.65rem; letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.4);
+    text-align: left; padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  td { padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+  tr:hover td { background: rgba(255,255,255,0.03); }
+  .role-badge {
+    font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 20px;
+    font-family: 'Orbitron', monospace; letter-spacing: 0.06em;
+  }
+  .role-BAT { background: rgba(255,200,0,0.15); color: #ffd700; border: 1px solid rgba(255,200,0,0.3); }
+  .role-BWL { background: rgba(255,80,80,0.12); color: #ff7070; border: 1px solid rgba(255,80,80,0.25); }
+  .role-AR { background: rgba(0,229,255,0.12); color: #00e5ff; border: 1px solid rgba(0,229,255,0.25); }
+  .role-WK { background: rgba(160,80,255,0.12); color: #c080ff; border: 1px solid rgba(160,80,255,0.25); }
+  .status-unsold { color: rgba(255,255,255,0.3); font-size: 0.75rem; }
+  .status-sold { color: #50ff80; font-size: 0.75rem; font-weight: 700; }
 
   /* ─── AUCTION STAGE ─── */
   .auction-layout { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; }
   @media (max-width: 900px) { .auction-layout { grid-template-columns: 1fr; } }
 
   .player-spotlight {
-    background: radial-gradient(circle at top, rgba(255,215,0,0.1), transparent);
-    border: 1px solid rgba(255,215,0,0.2); border-radius: 12px; padding: 2rem;
-    text-align: center; position: relative; min-height: 400px;
+    background: linear-gradient(160deg, rgba(255,215,0,0.07) 0%, rgba(10,14,39,0.8) 60%);
+    border: 1px solid rgba(255,215,0,0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .player-spotlight::before {
+    content: '';
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(ellipse 40% 40% at 50% 30%, rgba(255,215,0,0.08) 0%, transparent 60%);
+    animation: spotlight-pulse 4s ease-in-out infinite alternate;
+  }
+  @keyframes spotlight-pulse { from { opacity: 0.5; } to { opacity: 1; } }
+
+  .player-number {
+    font-family: 'Bebas Neue'; font-size: 1rem;
+    color: rgba(255,215,0,0.4); letter-spacing: 0.3em; margin-bottom: 0.5rem;
+  }
+  .player-avatar {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(0,229,255,0.1));
+    border: 2px solid rgba(255,215,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; margin: 0 auto 1rem;
+    box-shadow: 0 0 30px rgba(255,215,0,0.15);
+  }
+  .player-name-big {
+    font-family: 'Bebas Neue'; font-size: 2.4rem; letter-spacing: 0.05em;
+    background: linear-gradient(135deg, #fff, var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1.1;
+  }
+  .player-country { color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-top: 0.2rem; }
+  .base-price-label {
+    font-family: 'Orbitron'; font-size: 0.65rem; letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.4); margin-top: 1rem;
+  }
+  .base-price-val {
+    font-family: 'Bebas Neue'; font-size: 1.8rem; color: var(--gold);
+    letter-spacing: 0.05em;
   }
 
+  /* BID DISPLAY */
+  .current-bid-panel {
+    background: linear-gradient(135deg, rgba(220,20,60,0.15), rgba(220,20,60,0.05));
+    border: 1px solid rgba(220,20,60,0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .bid-label { font-family: 'Orbitron'; font-size: 0.65rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.4); }
   .bid-amount {
-    font-family: 'Bebas Neue'; font-size: 4rem; color: var(--gold);
-    text-shadow: 0 0 20px rgba(255,215,0,0.3);
+    font-family: 'Bebas Neue'; font-size: 3rem; letter-spacing: 0.05em;
+    background: linear-gradient(135deg, #ff6b6b, var(--crimson));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    line-height: 1;
+    transition: all 0.3s;
   }
   .bid-amount.pulse { animation: bid-pulse 0.4s ease; }
-  @keyframes bid-pulse { 50% { transform: scale(1.1); text-shadow: 0 0 40px var(--gold); } }
-
-  /* RTM LABEL */
-  .rtm-tag {
-    position: absolute; top: 1rem; right: 1rem;
-    background: var(--cyan); color: var(--navy);
-    padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: bold; font-size: 0.7rem;
+  @keyframes bid-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); filter: drop-shadow(0 0 20px rgba(255,100,100,0.8)); }
+    100% { transform: scale(1); }
   }
+  .bid-by { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
 
-  /* TABLE */
-  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-  th { text-align: left; color: rgba(255,255,255,0.4); font-size: 0.7rem; padding: 0.5rem; border-bottom: 1px solid var(--glass-border); }
-  td { padding: 0.8rem 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-  .role-badge { font-family: 'Orbitron'; font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 10px; }
-  .role-BAT { background: #ffd70033; color: #ffd700; }
-  .role-BWL { background: #ff4d4d33; color: #ff4d4d; }
-  .role-AR { background: #00e5ff33; color: #00e5ff; }
+  /* BID CONTROLS */
+  .bid-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+  .bid-team-selector label { font-size: 0.75rem; margin-bottom: 0.5rem; }
+  .bid-increments {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;
+  }
+  .bid-inc-btn {
+    font-family: 'Orbitron'; font-size: 0.65rem; letter-spacing: 0.08em;
+    padding: 0.5rem; border-radius: 4px; cursor: pointer;
+    background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2);
+    color: var(--cyan); transition: all 0.2s;
+  }
+  .bid-inc-btn:hover { background: rgba(0,229,255,0.18); }
 
   .sold-banner {
-    position: absolute; inset: 0; background: rgba(10,14,39,0.95);
-    display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10;
+    position: absolute; inset: 0; z-index: 10;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(10,14,39,0.9);
+    backdrop-filter: blur(4px);
   }
-  .sold-banner.show { display: flex; }
+  .sold-banner.show { display: flex; animation: fadeIn 0.3s ease; }
+  .sold-text {
+    font-family: 'Bebas Neue'; font-size: 4rem; letter-spacing: 0.15em;
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(255,215,0,0.8), 0 0 80px rgba(255,215,0,0.4);
+    animation: sold-pop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes sold-pop { from { transform: scale(0.5) rotate(-5deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+  .sold-to { font-size: 1.2rem; color: rgba(255,255,255,0.7); margin-top: 0.5rem; }
+  .sold-price-big { font-family: 'Bebas Neue'; font-size: 2rem; color: #50ff80; margin-top: 0.2rem; }
 
-  .toast {
-    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
-    background: var(--navy-mid); border: 1px solid var(--gold);
-    padding: 1rem 2rem; border-radius: 8px; z-index: 1000; visibility: hidden;
+  .unsold-banner {
+    position: absolute; inset: 0; z-index: 10;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    background: rgba(10,14,39,0.9); backdrop-filter: blur(4px);
   }
-  .toast.show { visibility: visible; animation: slideUp 0.3s ease; }
-  @keyframes slideUp { from { transform: translate(-50%, 50px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+  .unsold-banner.show { display: flex; animation: fadeIn 0.3s ease; }
+  .unsold-text {
+    font-family: 'Bebas Neue'; font-size: 4rem; letter-spacing: 0.15em; color: #ff5555;
+    text-shadow: 0 0 40px rgba(255,80,80,0.6);
+  }
+
+  /* TIMER */
+  .timer-ring { display: flex; align-items: center; justify-content: center; margin: 0.5rem 0; }
+  .timer-circle {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,215,0,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron'; font-size: 1.3rem; font-weight: 700;
+    color: var(--gold);
+    position: relative;
+    background: rgba(255,215,0,0.05);
+  }
+  .timer-circle.urgent { color: #ff5555; border-color: rgba(255,80,80,0.4); animation: timer-blink 0.5s ease infinite alternate; }
+  @keyframes timer-blink { from { box-shadow: 0 0 10px rgba(255,80,80,0.3); } to { box-shadow: 0 0 25px rgba(255,80,80,0.7); } }
+
+  /* AUCTION QUEUE */
+  .queue-list { max-height: 300px; overflow-y: auto; padding-right: 0.3rem; }
+  .queue-list::-webkit-scrollbar { width: 3px; }
+  .queue-list::-webkit-scrollbar-track { background: transparent; }
+  .queue-list::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.3); border-radius: 3px; }
+  .queue-item {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.5rem 0.7rem; border-radius: 4px;
+    font-size: 0.85rem; cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: 0.3rem;
+  }
+  .queue-item:hover { background: rgba(255,255,255,0.04); border-color: var(--glass-border); }
+  .queue-item.current-auction { background: rgba(255,215,0,0.08); border-color: rgba(255,215,0,0.25); }
+  .q-role { font-family: 'Orbitron'; font-size: 0.6rem; padding: 0.15rem 0.4rem; border-radius: 20px; }
+  .q-name { flex: 1; }
+  .q-base { color: rgba(255,215,0,0.6); font-size: 0.75rem; font-family: 'Orbitron'; }
+  .q-sold { color: #50ff80; font-size: 0.7rem; }
+  .q-unsold { color: rgba(255,80,80,0.6); font-size: 0.7rem; }
+
+  /* TEAMS SIDEBAR */
+  .team-budget-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .team-budget-row {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.6rem 0.8rem; border-radius: 5px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .team-budget-row:hover { border-color: rgba(255,215,0,0.3); }
+  .team-budget-row.selected { border-color: var(--gold); background: rgba(255,215,0,0.07); }
+  .tbr-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .tbr-name { flex: 1; font-weight: 600; font-size: 0.9rem; }
+  .tbr-budget { font-family: 'Orbitron'; font-size: 0.7rem; color: var(--gold); }
+  .tbr-count { font-size: 0.72rem; color: rgba(255,255,255,0.35); }
+
+  /* RESULTS */
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; }
+  .result-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .result-card-header {
+    padding: 0.8rem 1rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .rc-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .rc-team { font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: 0.05em; flex: 1; }
+  .rc-budget { font-family: 'Orbitron'; font-size: 0.7rem; color: var(--gold); }
+  .rc-players { padding: 0 0.8rem 0.8rem; }
+  .rc-player-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.82rem;
+  }
+  .rc-player-row:last-child { border-bottom: none; }
+  .rc-price { color: #50ff80; font-family: 'Orbitron'; font-size: 0.7rem; }
+
+  /* CONFETTI */
+  .confetti-piece {
+    position: fixed; width: 8px; height: 8px; top: -10px;
+    animation: confetti-fall linear forwards;
+    z-index: 9999; pointer-events: none; border-radius: 2px;
+  }
+  @keyframes confetti-fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 3rem; opacity: 0.4; }
+  .empty-state .big-emoji { font-size: 3rem; margin-bottom: 0.8rem; }
+  .empty-state p { font-size: 0.9rem; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: rgba(20,25,60,0.95); border: 1px solid var(--glass-border);
+    padding: 0.8rem 1.5rem; border-radius: 6px;
+    font-size: 0.9rem; backdrop-filter: blur(10px);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 9998; white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* PROGRESS BAR */
+  .auction-progress { margin-bottom: 1rem; }
+  .progress-bar-wrap { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--crimson), var(--gold)); border-radius: 2px; transition: width 0.5s ease; }
+  .progress-label { font-family: 'Orbitron'; font-size: 0.65rem; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+
+  .flex-row { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }
+  .mt1 { margin-top: 1rem; }
+  .mt05 { margin-top: 0.5rem; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--glass-border); margin: 1rem 0; }
 </style>
 </head>
 <body>
 <div class="bg-layer"></div>
 <div id="app">
+
+  <!-- HEADER -->
   <header>
+    <div class="trophy-line">🏆</div>
     <h1>IPL MEGA AUCTION</h1>
-    <div class="subtitle">2026 PLAYER PORTAL</div>
+    <div class="subtitle">FRIENDS EDITION · 2026</div>
   </header>
 
+  <!-- TABS -->
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('setup')">SET-UP</button>
-    <button class="tab-btn" onclick="showTab('players')">PLAYERS</button>
-    <button class="tab-btn" onclick="showTab('auction')">AUCTION</button>
-    <button class="tab-btn" onclick="showTab('results')">SUMMARY</button>
+    <button class="tab-btn active" onclick="showTab('setup')">⚙️ Setup</button>
+    <button class="tab-btn" onclick="showTab('players')">🏏 Players</button>
+    <button class="tab-btn" onclick="showTab('auction')">🔨 Auction</button>
+    <button class="tab-btn" onclick="showTab('results')">🏆 Results</button>
   </div>
 
+  <!-- ═══ SETUP SECTION ═══ -->
   <div id="tab-setup" class="section active">
     <div class="setup-grid">
+
+      <!-- ADD TEAM -->
       <div class="glass-panel">
-        <div class="section-title">FRANCHISE REGISTRATION</div>
-        <label>TEAM NAME</label>
-        <input type="text" id="teamName" placeholder="e.g. Gujarat Titans">
-        <label>BUDGET (₹ CRORES)</label>
-        <input type="number" id="teamBudget" value="90">
-        <label>THEME COLOR</label>
-        <input type="color" id="teamColor" value="#1B2133">
-        <button class="btn btn-gold" onclick="addTeam()">+ REGISTER TEAM</button>
-        <div id="teamsList" style="margin-top:2rem;"></div>
+        <div class="section-title">🎽 Teams</div>
+        <div class="field-group">
+          <label>TEAM NAME</label>
+          <input type="text" id="teamName" placeholder="e.g. Mumbai Indians" maxlength="30">
+        </div>
+        <div class="field-group">
+          <label>TEAM COLOR</label>
+          <input type="color" id="teamColor" value="#005DAE" style="height:42px; cursor:pointer;">
+        </div>
+        <div class="field-group">
+          <label>PURSE (CRORES ₹)</label>
+          <input type="number" id="teamBudget" placeholder="90" value="90" min="10" max="1000">
+        </div>
+        <button class="btn btn-gold" onclick="addTeam()">+ ADD TEAM</button>
+        <div id="teamsList" class="teams-grid" style="margin-top:1.2rem;"></div>
       </div>
 
+      <!-- AUCTION SETTINGS -->
       <div class="glass-panel">
-        <div class="section-title">AUCTION CONTROLS</div>
-        <p style="font-size:0.8rem; opacity:0.6; margin-bottom:1rem;">Configure the hammer rules for this session.</p>
-        <label>TIMER (SECONDS)</label>
-        <select id="timerDuration">
-          <option value="15">15 Seconds</option>
-          <option value="30">30 Seconds</option>
-          <option value="0">Manual Only</option>
-        </select>
+        <div class="section-title">⚙️ Settings</div>
+        <div class="field-group">
+          <label>TIMER PER BID (SECONDS)</label>
+          <select id="timerDuration">
+            <option value="10">10 seconds</option>
+            <option value="15" selected>15 seconds</option>
+            <option value="20">20 seconds</option>
+            <option value="30">30 seconds</option>
+            <option value="0">No timer</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>BID INCREMENT STEPS (₹ CR)</label>
+          <input type="text" id="bidSteps" value="0.5, 1, 2, 5" placeholder="0.5, 1, 2, 5">
+        </div>
         <div class="divider"></div>
-        <button class="btn btn-cyan" onclick="loadPresets()">⚡ LOAD BASE PLAYERS</button>
-        <button class="btn btn-red" onclick="resetState()" style="margin-top:1rem; width:100%;">🔄 FACTORY RESET</button>
+        <div class="section-title" style="font-size:1.2rem;">📋 Quick Add Players</div>
+        <p style="font-size:0.82rem; color:rgba(255,255,255,0.4); margin-bottom:0.8rem;">Load a preset squad of 30 popular IPL players to get started fast.</p>
+        <button class="btn btn-cyan" onclick="loadPresetPlayers()">⚡ LOAD PRESET SQUAD</button>
+        <div style="margin-top:0.5rem; font-size:0.75rem; color:rgba(255,255,255,0.3);" id="presetStatus"></div>
+
+        <div class="divider"></div>
+        <div class="section-title" style="font-size:1.2rem; color:var(--cyan);">🚀 Ready?</div>
+        <p style="font-size:0.82rem; color:rgba(255,255,255,0.4); margin-bottom:0.8rem;">Setup teams & players, then start the auction!</p>
+        <button class="btn btn-gold" onclick="startAuction()">🔨 START AUCTION</button>
       </div>
     </div>
   </div>
 
+  <!-- ═══ PLAYERS SECTION ═══ -->
   <div id="tab-players" class="section">
     <div class="glass-panel">
-      <div class="section-title">PLAYER POOL MANAGEMENT</div>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem;">
-        <div>
-          <label>NAME</label><input type="text" id="pName">
-          <label>ROLE</label>
-          <select id="pRole">
-            <option value="BAT">Batsman</option>
-            <option value="BWL">Bowler</option>
-            <option value="AR">All-Rounder</option>
-            <option value="WK">Wicket-Keeper</option>
-          </select>
-          <label>BASE PRICE</label><input type="number" id="pBase" value="2">
-          <button class="btn btn-gold" onclick="addPlayer()">ADD PLAYER</button>
-        </div>
-        <div>
-          <label>BULK IMPORT (CSV: Name, Role, Price)</label>
-          <textarea id="bulkArea" placeholder="Rashid Khan, BWL, 2&#10;Shubman Gill, BAT, 2" style="height:115px;"></textarea>
-          <button class="btn btn-cyan" onclick="bulkImport()">IMPORT LIST</button>
-        </div>
+      <div class="flex-row" style="margin-bottom:1rem;">
+        <div class="section-title" style="margin-bottom:0;">🏏 Player Pool</div>
+        <button class="btn btn-gold btn-sm" onclick="openAddPlayer()">+ ADD PLAYER</button>
+        <button class="btn btn-cyan btn-sm" onclick="loadPresetPlayers()">⚡ PRESET SQUAD</button>
       </div>
-      
-      <table>
-        <thead><tr><th>PLAYER</th><th>ROLE</th><th>BASE</th><th>STATUS</th><th>ACTION</th></tr></thead>
-        <tbody id="playersTableBody"></tbody>
-      </table>
-    </div>
-  </div>
 
-  <div id="tab-auction" class="section">
-    <div class="auction-layout">
-      <div>
-        <div class="player-spotlight">
-          <div id="soldBanner" class="sold-banner">
-            <h1 style="color:var(--gold); font-size:4rem; font-family:'Bebas Neue';">SOLD!</h1>
-            <p id="soldToDisplay" style="font-size:1.5rem;"></p>
-            <button class="btn btn-gold" onclick="nextPlayer()" style="margin-top:1rem;">NEXT PLAYER</button>
+      <!-- Add player inline form -->
+      <div id="addPlayerForm" style="display:none; margin-bottom:1rem;">
+        <div class="glass-panel" style="background:rgba(0,229,255,0.04); border-color:rgba(0,229,255,0.2);">
+          <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap:0.8rem; align-items:end; flex-wrap:wrap;">
+            <div class="field-group" style="margin:0;">
+              <label>PLAYER NAME</label>
+              <input type="text" id="pName" placeholder="Virat Kohli">
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label>ROLE</label>
+              <select id="pRole">
+                <option value="BAT">Batsman</option>
+                <option value="BWL">Bowler</option>
+                <option value="AR">All-Rounder</option>
+                <option value="WK">Wicket-Keeper</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label>NATIONALITY</label>
+              <select id="pNation">
+                <option value="IND">🇮🇳 Indian</option>
+                <option value="OVS">🌍 Overseas</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label>BASE (₹CR)</label>
+              <input type="number" id="pBase" placeholder="2" value="2" min="0.2" step="0.2">
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn btn-gold btn-sm" onclick="addPlayer()">ADD</button>
+              <button class="btn btn-red btn-sm" onclick="document.getElementById('addPlayerForm').style.display='none'">✕</button>
+            </div>
           </div>
-          
-          <div id="rtmBadge" class="rtm-tag" style="display:none;">RTM ELIGIBLE</div>
-          <div style="font-family:'Orbitron'; color:var(--cyan); margin-bottom:1rem;" id="playerNum">---</div>
-          <h2 id="dispName" style="font-family:'Bebas Neue'; font-size:3.5rem;">WAITING...</h2>
-          <div id="dispRole" class="role-badge" style="display:inline-block; margin-bottom:2rem;">ROLE</div>
-          
-          <div class="bid-amount" id="currBid">₹0 Cr</div>
-          <div id="bidderName" style="opacity:0.6; margin-bottom:2rem;">No Bids Yet</div>
-          
-          <div id="timerDisplay" style="font-family:'Orbitron'; font-size:2rem; color:var(--crimson);">00</div>
-        </div>
-
-        <div style="display:flex; gap:1rem; margin-top:1rem;">
-          <select id="bidTeamSelect" style="flex:2; margin:0;"></select>
-          <button class="btn btn-gold" onclick="placeBid()" style="flex:1;">HAMMER BID</button>
-          <button class="btn btn-red" onclick="markUnsold()">UNSOLD</button>
         </div>
       </div>
 
-      <div class="glass-panel">
-        <div class="section-title" style="font-size:1.2rem;">FRANCHISE PURSES</div>
-        <div id="purseList"></div>
+      <div class="players-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>PLAYER</th><th>ROLE</th><th>NAT</th><th>BASE ₹CR</th><th>STATUS</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="playersTableBody"></tbody>
+        </table>
+        <div id="playersEmpty" class="empty-state">
+          <div class="big-emoji">🏏</div>
+          <p>No players yet. Load preset squad or add manually.</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <div id="tab-results" class="section">
-    <div id="resultsGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:1rem;"></div>
+  <!-- ═══ AUCTION SECTION ═══ -->
+  <div id="tab-auction" class="section">
+    <div id="auctionNotReady" class="empty-state" style="display:none; padding:4rem;">
+      <div class="big-emoji">⚠️</div>
+      <p style="margin-bottom:1rem;">Please add at least 2 teams and some players first.</p>
+      <button class="btn btn-gold" onclick="showTab('setup')">GO TO SETUP</button>
+    </div>
+    <div id="auctionContent" style="display:none;">
+      <div class="auction-progress">
+        <div class="progress-label">AUCTION PROGRESS — <span id="progressText">0 / 0</span></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+      </div>
+      <div class="auction-layout">
+        <!-- LEFT: Spotlight + Controls -->
+        <div>
+          <div class="player-spotlight" id="playerSpotlight">
+            <div id="soldBanner" class="sold-banner">
+              <div class="sold-text">🔨 SOLD!</div>
+              <div class="sold-to" id="soldToText"></div>
+              <div class="sold-price-big" id="soldPriceText"></div>
+              <button class="btn btn-gold mt1" onclick="nextPlayer()">NEXT PLAYER ▶</button>
+            </div>
+            <div id="unsoldBanner" class="unsold-banner">
+              <div class="unsold-text">❌ UNSOLD</div>
+              <div class="sold-to">No bids placed</div>
+              <button class="btn btn-cyan mt1" onclick="nextPlayer()">NEXT PLAYER ▶</button>
+            </div>
+
+            <div id="spotlightInner">
+              <div class="player-number" id="spotPlayerNum">PLAYER #1</div>
+              <div class="player-avatar" id="spotPlayerEmoji">🏏</div>
+              <div class="player-name-big" id="spotPlayerName">—</div>
+              <div class="player-country" id="spotPlayerCountry"></div>
+              <div class="base-price-label">BASE PRICE</div>
+              <div class="base-price-val" id="spotBasePrice">₹ — Cr</div>
+            </div>
+
+            <div class="current-bid-panel" id="bidPanel">
+              <div class="bid-label">CURRENT BID</div>
+              <div class="bid-amount" id="currentBidAmt">—</div>
+              <div class="bid-by" id="currentBidBy">No bids yet</div>
+            </div>
+
+            <div class="timer-ring mt05">
+              <div class="timer-circle" id="timerCircle">—</div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex-row mt1">
+            <button class="btn btn-gold" id="btnPlaceBid" onclick="placeBid()">🔔 PLACE BID</button>
+            <button class="btn btn-red" onclick="markUnsold()">❌ UNSOLD</button>
+            <button class="btn btn-cyan" onclick="nextPlayer()" style="margin-left:auto;">SKIP ▶</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Sidebar -->
+        <div class="bid-sidebar">
+          <!-- Team Selector -->
+          <div class="glass-panel">
+            <div class="section-title" style="font-size:1rem; margin-bottom:0.8rem;">👥 BIDDING TEAM</div>
+            <select id="biddingTeamSelect" style="margin-bottom:0.8rem;">
+              <option value="">— Select Team —</option>
+            </select>
+            <div class="bid-label" style="margin-bottom:0.4rem;">BID INCREMENT</div>
+            <div class="bid-increments" id="bidIncrements"></div>
+          </div>
+
+          <!-- Teams & Budgets -->
+          <div class="glass-panel">
+            <div class="section-title" style="font-size:1rem; margin-bottom:0.8rem;">💰 PURSES</div>
+            <div class="team-budget-list" id="teamBudgetList"></div>
+          </div>
+
+          <!-- Queue -->
+          <div class="glass-panel" style="flex:1;">
+            <div class="section-title" style="font-size:1rem; margin-bottom:0.8rem;">📋 QUEUE</div>
+            <div class="queue-list" id="queueList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- ═══ RESULTS SECTION ═══ -->
+  <div id="tab-results" class="section">
+    <div class="glass-panel" style="margin-bottom:1.5rem;">
+      <div class="flex-row">
+        <div class="section-title" style="margin-bottom:0;">🏆 Auction Results</div>
+        <button class="btn btn-red btn-sm" onclick="resetAll()" style="margin-left:auto;">🔄 RESET ALL</button>
+      </div>
+      <div id="resultsStats" style="display:flex; gap:2rem; margin-top:1rem; flex-wrap:wrap;"></div>
+    </div>
+    <div class="results-grid" id="resultsGrid"></div>
+    <div id="resultsEmpty" class="empty-state" style="margin-top:2rem;">
+      <div class="big-emoji">🏏</div>
+      <p>No auction results yet. Run the auction first!</p>
+    </div>
+  </div>
+
 </div>
 
-<div id="toast" class="toast"></div>
+<div class="toast" id="toast"></div>
 
 <script>
-// --- STATE MANAGEMENT ---
-let state = JSON.parse(localStorage.getItem('iplState')) || {
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let state = {
   teams: [],
   players: [],
+  auctionQueue: [],
   currentIdx: 0,
   currentBid: 0,
-  currentBidderId: null,
-  auctionStarted: false
+  currentBidder: null,
+  timerInterval: null,
+  timerLeft: 0,
+  auctionStarted: false,
 };
 
-function save() { localStorage.setItem('iplState', JSON.stringify(state)); }
+const TEAM_COLORS = ['#005DAE','#D71920','#FBAB18','#004BA0','#F7A721','#45B5AA','#C0145C','#50B5E9','#004C97','#702082'];
 
-// --- UI CONTROLS ---
+// ═══════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════
 function showTab(tab) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
   event.target.classList.add('active');
-  if(tab === 'auction') initAuction();
-  if(tab === 'results') renderResults();
-  renderPlayers();
+  if (tab === 'auction') renderAuction();
+  if (tab === 'results') renderResults();
+  if (tab === 'players') renderPlayersTable();
 }
 
-// --- TEAM LOGIC ---
+// ═══════════════════════════════════════
+//  TEAMS
+// ═══════════════════════════════════════
 function addTeam() {
-  const name = document.getElementById('teamName').value;
-  if(!name) return toast("Enter team name");
-  state.teams.push({
-    id: Date.now(),
-    name: name,
-    budget: parseFloat(document.getElementById('teamBudget').value),
-    remaining: parseFloat(document.getElementById('teamBudget').value),
-    color: document.getElementById('teamColor').value,
-    squad: []
-  });
-  save(); renderTeams();
+  const name = document.getElementById('teamName').value.trim();
+  const color = document.getElementById('teamColor').value;
+  const budget = parseFloat(document.getElementById('teamBudget').value) || 90;
+  if (!name) { toast('Enter a team name!'); return; }
+  if (state.teams.find(t => t.name.toLowerCase() === name.toLowerCase())) { toast('Team already exists!'); return; }
+  state.teams.push({ id: Date.now(), name, color, budget, remaining: budget, players: [] });
+  document.getElementById('teamName').value = '';
+  renderTeamsList();
+  toast('Team added: ' + name);
 }
 
-function renderTeams() {
-  const list = document.getElementById('teamsList');
-  list.innerHTML = state.teams.map(t => `
-    <div class="glass-panel" style="border-left: 5px solid ${t.color}; margin-bottom:0.5rem; padding:0.8rem;">
-      <strong>${t.name}</strong> - ₹${t.remaining} Cr
+function removeTeam(id) {
+  state.teams = state.teams.filter(t => t.id !== id);
+  renderTeamsList();
+}
+
+function renderTeamsList() {
+  const el = document.getElementById('teamsList');
+  if (!state.teams.length) { el.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:0.85rem;">No teams yet.</div>'; return; }
+  el.innerHTML = state.teams.map(t => `
+    <div class="team-card">
+      <div class="team-color-bar" style="background:${t.color}"></div>
+      <button class="remove-team" onclick="removeTeam(${t.id})">✕</button>
+      <div class="team-name">${t.name}</div>
+      <div class="team-budget">₹${t.remaining} Cr</div>
+      <div class="team-players-count">${t.players.length} players</div>
     </div>
   `).join('');
 }
 
-// --- PLAYER LOGIC ---
+// ═══════════════════════════════════════
+//  PLAYERS
+// ═══════════════════════════════════════
+const PRESET_PLAYERS = [
+  {name:'Virat Kohli', role:'BAT', nat:'IND', base:2},
+  {name:'Rohit Sharma', role:'BAT', nat:'IND', base:2},
+  {name:'MS Dhoni', role:'WK', nat:'IND', base:2},
+  {name:'Hardik Pandya', role:'AR', nat:'IND', base:2},
+  {name:'Jasprit Bumrah', role:'BWL', nat:'IND', base:2},
+  {name:'KL Rahul', role:'WK', nat:'IND', base:2},
+  {name:'Shreyas Iyer', role:'BAT', nat:'IND', base:2},
+  {name:'Ravindra Jadeja', role:'AR', nat:'IND', base:2},
+  {name:'Yuzvendra Chahal', role:'BWL', nat:'IND', base:1},
+  {name:'Suryakumar Yadav', role:'BAT', nat:'IND', base:2},
+  {name:'Pat Cummins', role:'BWL', nat:'OVS', base:2},
+  {name:'Jos Buttler', role:'WK', nat:'OVS', base:2},
+  {name:'David Warner', role:'BAT', nat:'OVS', base:2},
+  {name:'Mitchell Starc', role:'BWL', nat:'OVS', base:2},
+  {name:'Faf du Plessis', role:'BAT', nat:'OVS', base:1},
+  {name:'Rashid Khan', role:'BWL', nat:'OVS', base:2},
+  {name:'Andre Russell', role:'AR', nat:'OVS', base:2},
+  {name:'Sunil Narine', role:'AR', nat:'OVS', base:2},
+  {name:'Trent Boult', role:'BWL', nat:'OVS', base:1},
+  {name:'Sam Curran', role:'AR', nat:'OVS', base:2},
+  {name:'Shubman Gill', role:'BAT', nat:'IND', base:2},
+  {name:'Ishan Kishan', role:'WK', nat:'IND', base:2},
+  {name:'Axar Patel', role:'AR', nat:'IND', base:1},
+  {name:'Mohammed Shami', role:'BWL', nat:'IND', base:2},
+  {name:'Arshdeep Singh', role:'BWL', nat:'IND', base:1},
+  {name:'Sanju Samson', role:'WK', nat:'IND', base:2},
+  {name:'Glenn Maxwell', role:'AR', nat:'OVS', base:2},
+  {name:'Nicholas Pooran', role:'WK', nat:'OVS', base:1},
+  {name:'Tim David', role:'BAT', nat:'OVS', base:1},
+  {name:'Liam Livingstone', role:'AR', nat:'OVS', base:1},
+];
+
+const ROLE_EMOJIS = {BAT:'🏏', BWL:'⚡', AR:'🌟', WK:'🧤'};
+
+function loadPresetPlayers() {
+  const existing = new Set(state.players.map(p => p.name.toLowerCase()));
+  let added = 0;
+  PRESET_PLAYERS.forEach(p => {
+    if (!existing.has(p.name.toLowerCase())) {
+      state.players.push({ id: Date.now() + Math.random(), ...p, status: 'available', soldTo: null, soldPrice: 0 });
+      added++;
+    }
+  });
+  document.getElementById('presetStatus').textContent = `✓ ${added} players loaded`;
+  renderPlayersTable();
+  toast(`${added} players loaded!`);
+}
+
+function openAddPlayer() {
+  const f = document.getElementById('addPlayerForm');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
 function addPlayer() {
-  const name = document.getElementById('pName').value;
-  if(!name) return;
-  state.players.push({
-    id: Date.now(),
-    name: name,
-    role: document.getElementById('pRole').value,
-    base: parseFloat(document.getElementById('pBase').value),
-    status: 'available'
-  });
-  save(); renderPlayers();
-}
-
-function bulkImport() {
-  const data = document.getElementById('bulkArea').value.split('\n');
-  data.forEach(line => {
-    const [n, r, p] = line.split(',');
-    if(n) state.players.push({ id: Math.random(), name: n.trim(), role: (r||'BAT').trim().toUpperCase(), base: parseFloat(p)||2, status:'available' });
-  });
-  save(); renderPlayers();
-}
-
-function renderPlayers() {
-  const body = document.getElementById('playersTableBody');
-  body.innerHTML = state.players.map(p => `
-    <tr>
-      <td>${p.name}</td>
-      <td><span class="role-badge role-${p.role}">${p.role}</span></td>
-      <td>₹${p.base}Cr</td>
-      <td>${p.status}</td>
-      <td><button onclick="removePlayer(${p.id})">❌</button></td>
-    </tr>
-  `).join('');
+  const name = document.getElementById('pName').value.trim();
+  const role = document.getElementById('pRole').value;
+  const nat = document.getElementById('pNation').value;
+  const base = parseFloat(document.getElementById('pBase').value) || 2;
+  if (!name) { toast('Enter player name!'); return; }
+  state.players.push({ id: Date.now(), name, role, nat, base, status: 'available', soldTo: null, soldPrice: 0 });
+  document.getElementById('pName').value = '';
+  renderPlayersTable();
+  toast('Player added: ' + name);
 }
 
 function removePlayer(id) {
   state.players = state.players.filter(p => p.id !== id);
-  save(); renderPlayers();
+  renderPlayersTable();
 }
 
-// --- AUCTION ENGINE ---
-let timer;
-let timeLeft;
+function renderPlayersTable() {
+  const tbody = document.getElementById('playersTableBody');
+  const empty = document.getElementById('playersEmpty');
+  if (!state.players.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = state.players.map((p, i) => `
+    <tr>
+      <td style="color:rgba(255,255,255,0.3)">${i+1}</td>
+      <td><strong>${p.name}</strong></td>
+      <td><span class="role-badge role-${p.role}">${p.role}</span></td>
+      <td>${p.nat === 'IND' ? '🇮🇳' : '🌍'}</td>
+      <td style="font-family:'Orbitron',monospace; font-size:0.8rem; color:var(--gold)">₹${p.base}Cr</td>
+      <td>${p.status === 'sold' ? `<span class="status-sold">SOLD → ${p.soldTo}</span>` : p.status === 'unsold' ? '<span style="color:#ff5555;font-size:0.75rem;">UNSOLD</span>' : '<span class="status-unsold">AVAILABLE</span>'}</td>
+      <td><button class="btn btn-red btn-sm" onclick="removePlayer(${p.id})" style="padding:0.25rem 0.5rem; font-size:0.6rem;">✕</button></td>
+    </tr>
+  `).join('');
+}
 
-function initAuction() {
-  const sel = document.getElementById('bidTeamSelect');
-  sel.innerHTML = state.teams.map(t => `<option value="${t.id}">${t.name} (₹${t.remaining}Cr)</option>`).join('');
-  
-  const pList = document.getElementById('purseList');
-  pList.innerHTML = state.teams.map(t => `
-    <div style="display:flex; justify-content:space-between; padding:0.5rem; border-bottom:1px solid #ffffff11;">
-      <span>${t.name}</span><span style="color:var(--gold)">₹${t.remaining}Cr</span>
+// ═══════════════════════════════════════
+//  AUCTION
+// ═══════════════════════════════════════
+function startAuction() {
+  if (state.teams.length < 2) { toast('Add at least 2 teams!'); return; }
+  if (!state.players.length) { toast('Add some players first!'); return; }
+  // Reset
+  state.players.forEach(p => { p.status = 'available'; p.soldTo = null; p.soldPrice = 0; });
+  state.teams.forEach(t => { t.remaining = t.budget; t.players = []; });
+  state.auctionQueue = [...state.players];
+  state.currentIdx = 0;
+  state.auctionStarted = true;
+  showTabDirect('auction');
+  toast('🔨 Auction started! Good luck!');
+}
+
+function showTabDirect(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelectorAll('.tab-btn')[['setup','players','auction','results'].indexOf(tab)].classList.add('active');
+  renderAuction();
+}
+
+function renderAuction() {
+  const notReady = document.getElementById('auctionNotReady');
+  const content = document.getElementById('auctionContent');
+  if (!state.auctionStarted || state.teams.length < 2 || !state.players.length) {
+    notReady.style.display = 'block'; content.style.display = 'none'; return;
+  }
+  notReady.style.display = 'none'; content.style.display = 'block';
+  populateBiddingTeams();
+  renderBidIncrements();
+  renderTeamBudgets();
+  loadCurrentPlayer();
+  renderQueue();
+}
+
+function populateBiddingTeams() {
+  const sel = document.getElementById('biddingTeamSelect');
+  sel.innerHTML = '<option value="">— Select Team —</option>' +
+    state.teams.map(t => `<option value="${t.id}">${t.name} (₹${t.remaining.toFixed(1)}Cr)</option>`).join('');
+}
+
+function renderBidIncrements() {
+  const raw = document.getElementById('bidSteps').value;
+  const steps = raw.split(',').map(s => parseFloat(s.trim())).filter(Boolean);
+  const el = document.getElementById('bidIncrements');
+  el.innerHTML = steps.map(s => `<button class="bid-inc-btn" onclick="setBidIncrement(${s})">+₹${s}Cr</button>`).join('');
+}
+
+let bidIncrement = 0.5;
+function setBidIncrement(v) {
+  bidIncrement = v;
+  document.querySelectorAll('.bid-inc-btn').forEach(b => {
+    b.style.background = parseFloat(b.textContent.replace(/[^0-9.]/g,'')) === v ? 'rgba(0,229,255,0.25)' : '';
+  });
+}
+
+function renderTeamBudgets() {
+  const el = document.getElementById('teamBudgetList');
+  el.innerHTML = state.teams.map(t => `
+    <div class="team-budget-row ${state.currentBidder == t.id ? 'selected' : ''}" onclick="selectBiddingTeam(${t.id})">
+      <div class="tbr-dot" style="background:${t.color}"></div>
+      <div class="tbr-name">${t.name}</div>
+      <div class="tbr-budget">₹${t.remaining.toFixed(1)}Cr</div>
+      <div class="tbr-count">${t.players.length}p</div>
     </div>
   `).join('');
+}
 
-  loadCurrentPlayer();
+function selectBiddingTeam(id) {
+  document.getElementById('biddingTeamSelect').value = id;
+  state.currentBidder = id;
+  renderTeamBudgets();
 }
 
 function loadCurrentPlayer() {
-  const p = state.players[state.currentIdx];
-  if(!p) {
-    document.getElementById('dispName').textContent = "AUCTION ENDED";
-    return;
-  }
-  document.getElementById('playerNum').textContent = `PLAYER ${state.currentIdx + 1} / ${state.players.length}`;
-  document.getElementById('dispName').textContent = p.name;
-  document.getElementById('dispRole').textContent = p.role;
-  document.getElementById('currBid').textContent = `₹${p.base} Cr`;
-  state.currentBid = p.base;
-  state.currentBidderId = null;
-  document.getElementById('bidderName').textContent = "Awaiting opening bid...";
+  stopTimer();
   document.getElementById('soldBanner').classList.remove('show');
+  document.getElementById('unsoldBanner').classList.remove('show');
+
+  if (state.currentIdx >= state.auctionQueue.length) {
+    showAuctionEnd(); return;
+  }
+
+  const p = state.auctionQueue[state.currentIdx];
+  const total = state.auctionQueue.length;
+  const done = state.auctionQueue.filter(x => x.status !== 'available').length;
+
+  document.getElementById('progressText').textContent = `${done} / ${total}`;
+  document.getElementById('progressBar').style.width = (done / total * 100) + '%';
+  document.getElementById('spotPlayerNum').textContent = `PLAYER #${state.currentIdx + 1}`;
+  document.getElementById('spotPlayerEmoji').textContent = ROLE_EMOJIS[p.role] || '🏏';
+  document.getElementById('spotPlayerName').textContent = p.name;
+  document.getElementById('spotPlayerCountry').textContent = p.nat === 'IND' ? '🇮🇳 India' : '🌍 Overseas';
+  document.getElementById('spotBasePrice').textContent = `₹ ${p.base} Cr`;
+
+  state.currentBid = p.base;
+  state.currentBidder = null;
+  document.getElementById('currentBidAmt').textContent = `₹${state.currentBid}Cr`;
+  document.getElementById('currentBidBy').textContent = 'No bids yet';
+
   startTimer();
+  renderQueue();
 }
 
 function placeBid() {
-  const teamId = parseInt(document.getElementById('bidTeamSelect').value);
+  const teamId = parseInt(document.getElementById('biddingTeamSelect').value);
+  if (!teamId) { toast('Select a bidding team!'); return; }
   const team = state.teams.find(t => t.id === teamId);
-  
-  let increment = state.currentBid < 5 ? 0.2 : 0.5;
-  let newBid = state.currentBidderId ? state.currentBid + increment : state.currentBid;
-  
-  if(team.remaining < newBid) return toast("Insufficient Funds!");
-  if(state.currentBidderId === teamId) return toast("You already hold the bid!");
+  if (!team) return;
+  const newBid = state.currentBid + bidIncrement;
+  if (newBid > team.remaining) { toast(`${team.name} can't afford ₹${newBid.toFixed(1)}Cr!`); return; }
 
-  state.currentBid = newBid;
-  state.currentBidderId = teamId;
-  
-  const bidUI = document.getElementById('currBid');
-  bidUI.textContent = `₹${state.currentBid.toFixed(1)} Cr`;
-  bidUI.classList.remove('pulse'); void bidUI.offsetWidth; bidUI.classList.add('pulse');
-  
-  document.getElementById('bidderName').textContent = `Current Bid by ${team.name}`;
+  state.currentBid = Math.round(newBid * 10) / 10;
+  state.currentBidder = teamId;
+
+  const amtEl = document.getElementById('currentBidAmt');
+  amtEl.textContent = `₹${state.currentBid}Cr`;
+  amtEl.classList.remove('pulse');
+  void amtEl.offsetWidth;
+  amtEl.classList.add('pulse');
+  document.getElementById('currentBidBy').textContent = `🔔 ${team.name}`;
+
+  renderTeamBudgets();
+  populateBiddingTeams();
   resetTimer();
 }
 
 function markUnsold() {
-  state.players[state.currentIdx].status = 'unsold';
-  nextPlayer();
+  stopTimer();
+  const p = state.auctionQueue[state.currentIdx];
+  p.status = 'unsold';
+  document.getElementById('unsoldBanner').classList.add('show');
+  renderQueue();
+}
+
+function markSold() {
+  stopTimer();
+  if (!state.currentBidder) { toast('No bids placed! Mark as Unsold.'); return; }
+  const p = state.auctionQueue[state.currentIdx];
+  const team = state.teams.find(t => t.id === state.currentBidder);
+  if (!team) return;
+  p.status = 'sold';
+  p.soldTo = team.name;
+  p.soldPrice = state.currentBid;
+  team.remaining = Math.round((team.remaining - state.currentBid) * 10) / 10;
+  team.players.push({ name: p.name, role: p.role, price: state.currentBid });
+
+  document.getElementById('soldToText').textContent = `TO ${team.name.toUpperCase()}`;
+  document.getElementById('soldPriceText').textContent = `₹${state.currentBid}Cr`;
+  document.getElementById('soldBanner').classList.add('show');
+  renderQueue();
+  spawnConfetti();
 }
 
 function nextPlayer() {
+  document.getElementById('soldBanner').classList.remove('show');
+  document.getElementById('unsoldBanner').classList.remove('show');
   state.currentIdx++;
-  save();
+  if (state.currentIdx >= state.auctionQueue.length) {
+    showAuctionEnd(); return;
+  }
   loadCurrentPlayer();
+  populateBiddingTeams();
+  renderTeamBudgets();
+  renderPlayersTable();
 }
 
+function showAuctionEnd() {
+  stopTimer();
+  document.getElementById('spotPlayerName').textContent = 'AUCTION COMPLETE';
+  document.getElementById('spotPlayerEmoji').textContent = '🏆';
+  document.getElementById('spotPlayerCountry').textContent = 'All players have been auctioned!';
+  document.getElementById('spotBasePrice').textContent = '';
+  document.getElementById('progressText').textContent = `${state.auctionQueue.length} / ${state.auctionQueue.length}`;
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('timerCircle').textContent = '✓';
+  toast('🏆 Auction Complete! Check Results!');
+}
+
+// ─── TIMER ───
 function startTimer() {
-  const duration = parseInt(document.getElementById('timerDuration').value);
-  if(duration === 0) return;
-  timeLeft = duration;
-  clearInterval(timer);
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById('timerDisplay').textContent = timeLeft < 10 ? '0'+timeLeft : timeLeft;
-    if(timeLeft <= 0) {
-      clearInterval(timer);
-      finalizeSale();
+  const dur = parseInt(document.getElementById('timerDuration').value);
+  if (!dur) { document.getElementById('timerCircle').textContent = '∞'; return; }
+  state.timerLeft = dur;
+  updateTimerDisplay();
+  state.timerInterval = setInterval(() => {
+    state.timerLeft--;
+    updateTimerDisplay();
+    if (state.timerLeft <= 0) {
+      stopTimer();
+      if (state.currentBidder) markSold();
+      else markUnsold();
     }
   }, 1000);
 }
 
-function resetTimer() { clearInterval(timer); startTimer(); }
-
-function finalizeSale() {
-  if(!state.currentBidderId) {
-    markUnsold();
-    return;
-  }
-  const team = state.teams.find(t => t.id === state.currentBidderId);
-  const player = state.players[state.currentIdx];
-  
-  player.status = 'sold';
-  player.soldPrice = state.currentBid;
-  player.owner = team.name;
-  
-  team.remaining -= state.currentBid;
-  team.squad.push({ name: player.name, price: state.currentBid });
-  
-  document.getElementById('soldToDisplay').textContent = `${player.name} sold to ${team.name} for ₹${state.currentBid.toFixed(1)} Cr`;
-  document.getElementById('soldBanner').classList.add('show');
+function stopTimer() {
+  clearInterval(state.timerInterval);
+  state.timerInterval = null;
 }
 
+function resetTimer() {
+  stopTimer();
+  startTimer();
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timerCircle');
+  el.textContent = state.timerLeft;
+  el.classList.toggle('urgent', state.timerLeft <= 5);
+}
+
+// ─── QUEUE ───
+function renderQueue() {
+  const el = document.getElementById('queueList');
+  el.innerHTML = state.auctionQueue.map((p, i) => `
+    <div class="queue-item ${i === state.currentIdx ? 'current-auction' : ''}">
+      <span class="q-role role-badge role-${p.role}">${p.role}</span>
+      <span class="q-name">${p.name}</span>
+      ${p.status === 'sold' ? `<span class="q-sold">✓ ${p.soldTo}</span>` : p.status === 'unsold' ? '<span class="q-unsold">✗</span>' : `<span class="q-base">₹${p.base}Cr</span>`}
+    </div>
+  `).join('');
+  // Scroll to current
+  const items = el.querySelectorAll('.queue-item');
+  if (items[state.currentIdx]) items[state.currentIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ═══════════════════════════════════════
+//  RESULTS
+// ═══════════════════════════════════════
 function renderResults() {
   const grid = document.getElementById('resultsGrid');
+  const empty = document.getElementById('resultsEmpty');
+  const stats = document.getElementById('resultsStats');
+
+  const soldPlayers = state.players.filter(p => p.status === 'sold');
+  const unsoldPlayers = state.players.filter(p => p.status === 'unsold');
+  const totalSpent = soldPlayers.reduce((a, p) => a + p.soldPrice, 0);
+
+  if (!state.auctionStarted || !soldPlayers.length) {
+    grid.innerHTML = ''; empty.style.display = 'block'; stats.innerHTML = ''; return;
+  }
+  empty.style.display = 'none';
+
+  stats.innerHTML = `
+    <div><div style="font-family:'Orbitron';font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em;">PLAYERS SOLD</div><div style="font-family:'Bebas Neue';font-size:1.8rem;color:var(--gold)">${soldPlayers.length}</div></div>
+    <div><div style="font-family:'Orbitron';font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em;">UNSOLD</div><div style="font-family:'Bebas Neue';font-size:1.8rem;color:#ff5555">${unsoldPlayers.length}</div></div>
+    <div><div style="font-family:'Orbitron';font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em;">TOTAL SPENT</div><div style="font-family:'Bebas Neue';font-size:1.8rem;color:#50ff80">₹${totalSpent.toFixed(1)}Cr</div></div>
+    <div><div style="font-family:'Orbitron';font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em;">TEAMS</div><div style="font-family:'Bebas Neue';font-size:1.8rem;color:var(--cyan)">${state.teams.length}</div></div>
+  `;
+
   grid.innerHTML = state.teams.map(t => `
-    <div class="glass-panel">
-      <h3 style="color:${t.color}">${t.name}</h3>
-      <p style="font-size:0.8rem; margin-bottom:1rem;">Balance: ₹${t.remaining.toFixed(1)} Cr</p>
-      ${t.squad.map(s => `<div style="display:flex; justify-content:space-between; font-size:0.85rem;"><span>${s.name}</span><span>₹${s.price}Cr</span></div>`).join('')}
+    <div class="result-card">
+      <div class="result-card-header" style="background:${t.color}22; border-bottom:1px solid ${t.color}44;">
+        <div class="rc-dot" style="background:${t.color}"></div>
+        <div class="rc-team">${t.name}</div>
+        <div class="rc-budget">₹${t.remaining.toFixed(1)}Cr left</div>
+      </div>
+      <div class="rc-players">
+        ${t.players.length ? t.players.map(p => `
+          <div class="rc-player-row">
+            <span>${ROLE_EMOJIS[p.role]} ${p.name}</span>
+            <span class="rc-price">₹${p.price}Cr</span>
+          </div>
+        `).join('') : '<div style="color:rgba(255,255,255,0.25);font-size:0.8rem;padding:0.5rem 0;">No players yet</div>'}
+      </div>
     </div>
   `).join('');
 }
 
+// ═══════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════
 function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-function resetState() {
-  if(confirm("Wipe all data?")) {
-    localStorage.clear();
-    location.reload();
+function resetAll() {
+  if (!confirm('Reset everything? This will clear all auction data.')) return;
+  state.players.forEach(p => { p.status = 'available'; p.soldTo = null; p.soldPrice = 0; });
+  state.teams.forEach(t => { t.remaining = t.budget; t.players = []; });
+  state.auctionQueue = [];
+  state.currentIdx = 0;
+  state.auctionStarted = false;
+  stopTimer();
+  renderResults();
+  renderPlayersTable();
+  toast('Reset complete!');
+}
+
+function spawnConfetti() {
+  const colors = ['#FFD700','#FF6B6B','#00E5FF','#50FF80','#FF80FF','#FFFFFF'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `
+      left:${Math.random()*100}vw;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*6}px;
+      height:${6+Math.random()*6}px;
+      animation-duration:${1.5+Math.random()*1.5}s;
+      animation-delay:${Math.random()*0.5}s;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
   }
 }
 
-function loadPresets() {
-  const presets = [
-    {name:"Virat Kohli", role:"BAT", base:2},
-    {name:"Rashid Khan", role:"BWL", base:2},
-    {name:"Jasprit Bumrah", role:"BWL", base:2},
-    {name:"Hardik Pandya", role:"AR", base:2}
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+// Add default teams for quick start
+function initDefaults() {
+  const defaultTeams = [
+    {name:'Mumbai Indians', color:'#005DAE'},
+    {name:'Chennai Super Kings', color:'#FBAB18'},
+    {name:'Royal Challengers', color:'#D71920'},
+    {name:'Kolkata Knight Riders', color:'#3A225D'},
   ];
-  state.players = presets.map(p => ({...p, id: Math.random(), status:'available'}));
-  save(); renderPlayers();
+  defaultTeams.forEach((t, i) => {
+    state.teams.push({ id: Date.now()+i, name: t.name, color: t.color, budget: 90, remaining: 90, players: [] });
+  });
+  renderTeamsList();
 }
-
-// Init
-renderTeams();
-renderPlayers();
+initDefaults();
 </script>
 </body>
 </html>
